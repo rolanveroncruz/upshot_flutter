@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import
+import '../shared/sp_helper.dart';
+import '../shared/login.dart';
+
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -11,7 +13,13 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   TextEditingController nameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  final SPHelper helper = SPHelper();
 
+  @override
+  void initState(){
+    helper.init();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -82,7 +90,9 @@ class _LoginState extends State<Login> {
   }
 
   void doLogin(){
-    print(nameController.text);
+    var userlogin = UserLogin(nameController.text);
+    helper.writeUserLogin(userlogin);
+
   }
 
 }
