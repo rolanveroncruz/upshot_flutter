@@ -1,8 +1,13 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
-import '../shared/sp_helper.dart';
-import '../shared/login.dart';
+import 'package:upshot_flutter/data/directory.dart';
+import 'package:upshot_flutter/screens/activity.dart';
+import 'package:upshot_flutter/screens/insights.dart';
+import 'package:upshot_flutter/screens/profile.dart';
 import 'screens/login.dart';
 import 'screens/home.dart';
+
 void main() {
   runApp(const UpshotApp());
 }
@@ -15,24 +20,28 @@ class UpshotApp extends StatefulWidget {
 }
 
 class _UpshotAppState extends State<UpshotApp> {
-   late UserLogin userlogin;
-   late SPHelper helper;
+   bool isLoggedIn = true;
+   ServerDirectory serverDirectory = ServerDirectory();
 
   @override
   void initState() {
-    // TODO: implement initState
-    helper.init();
     super.initState();
-
+    serverDirectory.init();
   }
-  
+
+    
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        // appBar: AppBar(title: const Text('Upshot')),
-        body: Login()
-      )
+    return MaterialApp(
+      
+      theme: ThemeData(primarySwatch: Colors.blue),
+      routes:{
+        '/login':(context)=>Login(),
+        '/home': (context)=>HomeScreen(),
+        '/insights': (context)=>InsightsScreen(),
+        '/activity': (context)=>ActivityScreen(),
+        '/profile': (context)=>ProfileScreen()
+      }, initialRoute: '/login',
     );
   }
 }

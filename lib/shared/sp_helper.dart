@@ -1,5 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
-import 'login.dart';
+import 'user_login.dart';
 import 'dart:convert';
 
 class SPHelper {
@@ -9,5 +9,19 @@ class SPHelper {
   }
   Future writeUserLogin(UserLogin ul) async {
     prefs.setString("user",json.encode(ul.toJson()));
+  }
+  Future clearUserLogin() async {
+    prefs.remove("user");
+  }
+
+  UserLogin? readUserLogin(){
+    var userlogin = prefs.getString("user");
+    if (userlogin != null){
+      return UserLogin.fromJson(json.decode(userlogin));
+    }
+    else {
+      return null;
+    }
+
   }
 }
