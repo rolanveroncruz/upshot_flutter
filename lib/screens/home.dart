@@ -37,8 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
     ul = helper.readUserLogin();
     greeting = "${getGoodGreet()}, ${ul?.name}";
     super.initState();
-    roleId = ul?.role_id;
-    var totalJourneys = 0;
+    roleId = ul?.roleId;
     if (roleId == 1 || roleId == 3) {
       FLDataService flds = FLDataService();
       flds
@@ -84,7 +83,8 @@ class _HomeScreenState extends State<HomeScreen> {
         body: Column(children: [
           Container(
               padding: const EdgeInsets.only(top: 20),
-              child: Text(formattedDate!, style: TextStyle(fontSize: 20))),
+              child:
+                  Text(formattedDate!, style: const TextStyle(fontSize: 20))),
           Container(
               padding: const EdgeInsets.all(30.0),
               child: const Text("Hello there! Ready to start the day?",
@@ -96,7 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Container(
                   padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
                   child: ElevatedButton(
-                      onPressed: () => GotoOngoingJourneys(),
+                      onPressed: () => gotoOngoingJourneys(),
                       style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
@@ -112,5 +112,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ));
   }
 
-  void GotoOngoingJourneys() {}
+  void gotoOngoingJourneys() {
+    Navigator.pushNamed(context, '/ongoing');
+  }
 }

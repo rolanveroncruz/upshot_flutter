@@ -14,7 +14,7 @@ class FLDataService {
   Future<List<FLFeedbackJourney>> getAllSubmittedJourneys() async {
     String? server = helper.getServerAddress();
     String? uuid = helper.getUserUUID();
-    Uri uri = Uri.http(server!, "/api/${uuid}/fl_get_all_submitted_feedback");
+    Uri uri = Uri.http(server!, "/api/$uuid/fl_get_all_submitted_feedback");
     http.Response result = await http.post(uri, body: {});
     Map<String, dynamic> data = json.decode(result.body);
 

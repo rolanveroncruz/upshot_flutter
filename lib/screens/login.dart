@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:upshot_flutter/data/api.dart';
 import '../shared/sp_helper.dart';
-import '../shared/user_login.dart';
 import 'dart:convert';
-import 'package:http/http.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -73,7 +71,7 @@ class _LoginState extends State<Login> {
                       obscureText: !_passwordVisible,
                       controller: passwordController,
                       decoration: InputDecoration(
-                          border: OutlineInputBorder(),
+                          border: const OutlineInputBorder(),
                           labelText: 'Password',
                           suffixIcon: IconButton(
                             icon: Icon(_passwordVisible
@@ -97,7 +95,7 @@ class _LoginState extends State<Login> {
                   padding: const EdgeInsets.all(10),
                   child: Text(
                     errorMessage,
-                    style: TextStyle(fontSize: 15, color: Colors.red),
+                    style: const TextStyle(fontSize: 15, color: Colors.red),
                   )),
               TextButton(
                 onPressed: () {},

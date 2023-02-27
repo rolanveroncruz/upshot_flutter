@@ -14,7 +14,7 @@ class ManagerDataService {
   Future<List<EMFeedbackJourney>> getAllFeedbackGiven() async {
     String? server = helper.getServerAddress();
     String? uuid = helper.getUserUUID();
-    Uri uri = Uri.http(server!, "/api/${uuid}/get_all_journey_status");
+    Uri uri = Uri.http(server!, "/api/$uuid/get_all_journey_status");
     http.Response result = await http.post(uri, body: {});
     Map<String, dynamic> data = json.decode(result.body);
 

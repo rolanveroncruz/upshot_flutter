@@ -1,42 +1,42 @@
 class EMEntry {
-  String employee_do = "";
+  String employeeDo = "";
   String impact = "";
-  String do_more = "";
-  String do_less = "";
-  String? stop_doing = "";
-  String add_notes = "";
+  String doMore = "";
+  String doLess = "";
+  String? stopDoing = "";
+  String addNotes = "";
 
-  EMEntry() {}
+  EMEntry();
 
   EMEntry.fromJson(Map<String, dynamic> entry) {
-    employee_do = entry["employee_do"];
+    employeeDo = entry["employee_do"];
     impact = entry["impact"];
-    do_more = entry["do_more"];
-    do_less = entry["do_less"];
-    stop_doing = entry["stop_less"];
-    add_notes = entry["add_notes"];
+    doMore = entry["do_more"];
+    doLess = entry["do_less"];
+    stopDoing = entry["stop_less"];
+    addNotes = entry["add_notes"];
   }
 }
 
 class FLFeedbackJourney {
-  int fb_id = -1;
-  String em_name = "";
-  String em_position = "";
-  String feedback_type = "";
+  int fbId = -1;
+  String emName = "";
+  String emPosition = "";
+  String feedbackType = "";
   DateTime date = DateTime.now();
   String generalTopic = "";
   String subTopic = "";
-  EMEntry em_entry = EMEntry();
+  EMEntry emEntry = EMEntry();
 
   FLFeedbackJourney.fromJson(Map<String, dynamic> fb) {
-    fb_id = fb["fb_id"];
-    em_name = fb["em_name"];
-    em_position = fb["em_position"];
-    feedback_type = fb["feedback_type"];
+    fbId = fb["fb_id"];
+    emName = fb["em_name"];
+    emPosition = fb["em_position"];
+    feedbackType = fb["feedback_type"];
     date = string2Date(fb["date"]);
     generalTopic = fb["general_topic"];
     subTopic = fb["subtopic"];
-    em_entry = EMEntry.fromJson(fb["em_entry"]);
+    emEntry = EMEntry.fromJson(fb["em_entry"]);
   }
 }
 
@@ -56,29 +56,29 @@ DateTime string2Date(String datestr) {
 }
 
 class EMFeedbackJourney {
-  int journey_id = -1;
-  String feedback_type = "";
+  int journeyId = -1;
+  String feedbackType = "";
   String generalTopic = "";
   String? subTopic = "";
-  String? optional_other_subtopic = "";
-  bool? requires_face_to_face = null;
-  String frontliner_name = "";
-  DateTime date_created = DateTime.now();
+  String? optionalOtherSubtopic = "";
+  bool? requiresFace2Face;
+  String frontlinerName = "";
+  DateTime dateCreated = DateTime.now();
   String status = "";
-  int? phase_id = -1;
+  int? phaseId = -1;
   String title = "";
 
   EMFeedbackJourney.fromJson(Map<String, dynamic> fb) {
-    journey_id = fb["journey_id"];
-    feedback_type = fb["feedback_type"];
+    journeyId = fb["journey_id"];
+    feedbackType = fb["feedback_type"];
     generalTopic = fb["general_topic"];
     subTopic = fb["subtopic"];
-    optional_other_subtopic = fb["other_optional_subtopic"];
-    requires_face_to_face = fb["requires_face_to_face"];
-    frontliner_name = fb["frontliner_name"];
-    date_created = string2Date(fb["datetime"]);
+    optionalOtherSubtopic = fb["other_optional_subtopic"];
+    requiresFace2Face = fb["requires_face_to_face"];
+    frontlinerName = fb["frontliner_name"];
+    dateCreated = string2Date(fb["datetime"]);
     status = fb["status"];
-    phase_id = fb["current_progress"]["phase_id"];
+    phaseId = fb["current_progress"]["phase_id"];
     title = fb["current_progress"]["title"];
   }
 }
