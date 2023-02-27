@@ -41,22 +41,30 @@ class _HomeScreenState extends State<HomeScreen> {
     var totalJourneys = 0;
     if (roleId == 1 || roleId == 3) {
       FLDataService flds = FLDataService();
-      flds.getAllSubmittedJourneys().then((value) => {
-            allFlReceivedFb = value,
-            setState(() => {totalJourneys += allFlReceivedFb.length}),
-            print("All Feedback Received Length is: ${allFlReceivedFb.length}"),
-            print("Total Journeys is: $totalJourneys")
-          });
+      flds
+          .getAllSubmittedJourneys()
+          .then((value) => completedReceivingFLData(value));
       if (roleId == 2 || roleId == 3) {
         ManagerDataService mds = ManagerDataService();
-        mds.getAllFeedbackGiven().then((value) => {
-              allFeedbackGiven = value,
-              setState(() => {totalJourneys += allFeedbackGiven.length}),
-              print("All Feedback Given is: ${allFeedbackGiven.length}"),
-              print("Total Journeys is: $totalJourneys")
-            });
+        mds
+            .getAllFeedbackGiven()
+            .then((value) => completedReceivingAllFeedbackGiven(value));
       }
     }
+  }
+
+  void completedReceivingFLData(List<FLFeedbackJourney> value) {
+    allFlReceivedFb = value;
+    setState(() => totalJourneys += allFlReceivedFb.length);
+    print("All Feedback Received Length is: ${allFlReceivedFb.length}");
+    print("Total Journeys is: $totalJourneys");
+  }
+
+  void completedReceivingAllFeedbackGiven(List<EMFeedbackJourney> value) {
+    allFeedbackGiven = value;
+    setState(() => {totalJourneys += allFeedbackGiven.length});
+    print("All Feedback Given is: ${allFeedbackGiven.length}");
+    print("Total Journeys is: $totalJourneys");
   }
 
   String getGoodGreet() {
@@ -81,11 +89,21 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.all(30.0),
               child: const Text("Hello there! Ready to start the day?",
                   style: TextStyle(fontSize: 32))),
-          Container(
-              padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-              child: ElevatedButton(
-                  onPressed: () {},
-                  child: Text(" Ongoing Journeys: $totalJourneys"))),
+          ListView(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            children: [
+              Container(
+                  padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                  child: ElevatedButton(
+                      onPressed: () => GotoOngoingJourneys(),
+                      style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      )),
+                      child: Text(" Ongoing Journeys: $totalJourneys"))),
+            ],
+          )
         ]),
         bottomNavigationBar: const UpshotBottomNav(),
         floatingActionButton: FloatingActionButton(
@@ -93,4 +111,6 @@ class _HomeScreenState extends State<HomeScreen> {
           onPressed: () {},
         ));
   }
+
+  void GotoOngoingJourneys() {}
 }

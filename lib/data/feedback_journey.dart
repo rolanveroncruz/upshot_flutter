@@ -3,7 +3,7 @@ class EMEntry {
   String impact = "";
   String do_more = "";
   String do_less = "";
-  String stop_doing = "";
+  String? stop_doing = "";
   String add_notes = "";
 
   EMEntry() {}
@@ -13,7 +13,7 @@ class EMEntry {
     impact = entry["impact"];
     do_more = entry["do_more"];
     do_less = entry["do_less"];
-    stop_doing = entry["stop_doing"];
+    stop_doing = entry["stop_less"];
     add_notes = entry["add_notes"];
   }
 }

@@ -11,38 +11,36 @@ class API {
   SPHelper helper = SPHelper();
   late String? apiServer;
   late UserLogin userLogin;
-  
-
 
   void init() async {
-      await serverDirectory.init();
-      await helper.init();
+    await serverDirectory.init();
+    await helper.init();
   }
 
-  Future<Tuple2<int,String?>> login(String email, String password) async{
+  Future<Tuple2<int, String?>> login(String email, String password) async {
     var splitted = email.split('@');
     apiServer = serverDirectory.getIPFromEmail(splitted[1]);
-    if (apiServer == null){
+    if (apiServer == null) {
       return const Tuple2(-1, "Unknown Server");
-    }else{
+    } else {
       Uri uri = Uri.http(apiServer!, "/api/login");
-      Object body = jsonEncode(<String,String>{
+      Object body = jsonEncode(<String, String>{
         "email": email,
         "password": password,
       });
-      http.Response result = await http.post(uri,body:body);
+      http.Response result = await http.post(uri, body: body);
       Map<String, dynamic> data = json.decode(result.body);
       data['email'] = email;
-      if (data["status"] == "ok"){
+      var errorMsg = data['reason'];
+      if (data["status"] == "ok") {
         userLogin = UserLogin.fromJson(data);
         helper.writeUserLogin(userLogin);
+        helper.writeServerAddress(apiServer!);
+        helper.writeUserUUID(data["uuid"]);
         return const Tuple2(0, null);
-
+      } else {
+        return Tuple2(-1, errorMsg);
       }
-      return const Tuple2(-1, "error");
-
     }
-
   }
-
 }
