@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:upshot_flutter/data/api.dart';
-import '../shared/sp_helper.dart';
+import 'package:upshot_flutter/screens/auth/signup.dart';
+import '../../shared/sp_helper.dart';
 import 'dart:convert';
 
 class Login extends StatefulWidget {
-  const Login({super.key});
+  final VoidCallback goSignup;
+  const Login({Key? key, required this.goSignup}) : super(key: key);
 
   @override
   State<Login> createState() => _LoginState();
@@ -53,7 +55,7 @@ class _LoginState extends State<Login> {
                   alignment: Alignment.center,
                   padding: const EdgeInsets.all(10),
                   child: const Text(
-                    'Sign in',
+                    'Login',
                     style: TextStyle(fontSize: 20),
                   )),
               Container(
@@ -104,17 +106,14 @@ class _LoginState extends State<Login> {
                 ),
               ),
               Row(
-                children: <Widget>[
+                children: [
                   const Text('Does not have an account?'),
                   TextButton(
-                    child: const Text(
-                      'Sign up',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    onPressed: () {
-                      helper.clearUserLogin();
-                    },
-                  )
+                      onPressed: widget.goSignup,
+                      child: const Text(
+                        'Sign up',
+                        style: TextStyle(fontSize: 20),
+                      ))
                 ],
               )
             ])));

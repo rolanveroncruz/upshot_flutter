@@ -7,7 +7,7 @@ import 'package:upshot_flutter/shared/bottom_nav.dart';
 import 'package:upshot_flutter/shared/sp_helper.dart';
 import 'package:intl/intl.dart';
 import '../data/feedback_journey.dart';
-import '../shared/user_login.dart';
+import '../data/user_login.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

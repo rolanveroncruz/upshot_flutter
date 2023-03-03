@@ -1,6 +1,5 @@
 import 'package:upshot_flutter/shared/sp_helper.dart';
-import 'package:upshot_flutter/shared/user_login.dart';
-
+import 'package:upshot_flutter/data/user_login.dart';
 import 'directory.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
