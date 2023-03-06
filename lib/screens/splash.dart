@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:upshot_flutter/screens/authcheck.dart';
+import '../../shared/sp_helper.dart';
 
 class MySplashScreen extends StatefulWidget {
   const MySplashScreen({super.key});
@@ -11,8 +12,10 @@ class MySplashScreen extends StatefulWidget {
 }
 
 class _MySplashScreenState extends State<MySplashScreen> {
+  final SPHelper helper = SPHelper();
   @override
   void initState() {
+    helper.init();
     super.initState();
     Timer(
         const Duration(seconds: 3),
@@ -23,7 +26,10 @@ class _MySplashScreenState extends State<MySplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: Colors.white,
-        child: FlutterLogo(size: MediaQuery.of(context).size.height));
+        color: Colors.deepPurple.shade400,
+        child: Image.asset(
+          "lib/assets/images/upshot-logo.png",
+          scale: 0.25,
+        ));
   }
 }

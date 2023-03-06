@@ -1,3 +1,11 @@
+// ignore_for_file: constant_identifier_names
+
+enum UserRoles {
+  FL,
+  EM,
+  FLEM,
+}
+
 class UserLogin {
   String email = '';
   String name = '';

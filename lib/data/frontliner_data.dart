@@ -7,31 +7,37 @@ import 'dart:convert';
 
 class FLDataService {
   SPHelper helper = SPHelper();
+  List<FLFeedbackJourney>? theData;
+
   FLDataService() {
     helper.init();
   }
 
-  Future<List<FLFeedbackJourney>> getAllSubmittedJourneys() async {
-    String? server = helper.getServerAddress();
-    String? uuid = helper.getUserUUID();
-    Uri uri = Uri.http(server!, "/api/$uuid/fl_get_all_submitted_feedback");
-    http.Response result = await http.post(uri, body: {});
-    Map<String, dynamic> data = json.decode(result.body);
-
-    List<FLFeedbackJourney> retval = [];
-    if (data["status"] == "ok") {
-      retval = createListFromSubmittedFeedback(data["all_feedback"]);
+  Future<List<FLFeedbackJourney>?> getAllSubmittedJourneys(
+      {bool force = false}) async {
+    if (theData == null || force) {
+      String? server = helper.getServerAddress();
+      String? uuid = helper.getUserUUID();
+      Uri uri = Uri.http(server!, "/api/$uuid/fl_get_all_submitted_feedback");
+      http.Response result = await http.post(uri, body: {});
+      Map<String, dynamic> data = json.decode(result.body);
+      if (data["status"] == "ok") {
+        theData = _createListFromSubmittedFeedback(data["all_feedback"]);
+      }
+      return theData; // return the retrieved values.
+    } else {
+      return theData; // return the cached values.
     }
-    return retval;
   }
 
-  List<FLFeedbackJourney> createListFromSubmittedFeedback(List<dynamic> all) {
-    List<FLFeedbackJourney> result = [];
+  List<FLFeedbackJourney> _createListFromSubmittedFeedback(List<dynamic> all) {
+    // This simply converts all which is a List of anyhing to a List of FLFeedbackJourneys.
+    List<FLFeedbackJourney> temp = [];
     for (var i = 0; i < all.length; i++) {
       Map<String, dynamic> journey = all[i];
       FLFeedbackJourney fb = FLFeedbackJourney.fromJson(journey);
-      result.add(fb);
+      temp.add(fb);
     }
-    return result;
+    return temp;
   }
 }

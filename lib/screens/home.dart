@@ -38,25 +38,27 @@ class _HomeScreenState extends State<HomeScreen> {
     greeting = "${getGoodGreet()}, ${ul?.name}";
     super.initState();
     roleId = ul?.roleId;
+    // if role has an FL Component, query Fl Data
     if (roleId == 1 || roleId == 3) {
       FLDataService flds = FLDataService();
       flds
           .getAllSubmittedJourneys()
           .then((value) => completedReceivingFLData(value));
-      if (roleId == 2 || roleId == 3) {
-        ManagerDataService mds = ManagerDataService();
-        mds
-            .getAllFeedbackGiven()
-            .then((value) => completedReceivingAllFeedbackGiven(value));
-      }
+    }
+    // if role has EM Component, query for EM Data
+    if (roleId == 2 || roleId == 3) {
+      ManagerDataService mds = ManagerDataService();
+      mds
+          .getAllFeedbackGiven()
+          .then((value) => completedReceivingAllFeedbackGiven(value));
     }
   }
 
-  void completedReceivingFLData(List<FLFeedbackJourney> value) {
-    allFlReceivedFb = value;
-    setState(() => totalJourneys += allFlReceivedFb.length);
-    print("All Feedback Received Length is: ${allFlReceivedFb.length}");
-    print("Total Journeys is: $totalJourneys");
+  void completedReceivingFLData(List<FLFeedbackJourney>? value) {
+    if (value != null) {
+      allFlReceivedFb = value;
+      setState(() => totalJourneys += allFlReceivedFb.length);
+    }
   }
 
   void completedReceivingAllFeedbackGiven(List<EMFeedbackJourney> value) {

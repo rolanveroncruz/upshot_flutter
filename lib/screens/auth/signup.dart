@@ -10,9 +10,12 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> {
   TextEditingController nameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   bool _passwordVisible = false;
   String errorMessage = "";
+  // ignore: prefer_final_fields
+  bool _isPasswordLongEnough = false;
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +23,7 @@ class _SignUpState extends State<SignUp> {
         body: Padding(
             padding: const EdgeInsets.all(10),
             child: ListView(children: <Widget>[
+              // Upshot Text or Logo
               Container(
                   alignment: Alignment.center,
                   padding: const EdgeInsets.all(10),
@@ -30,6 +34,7 @@ class _SignUpState extends State<SignUp> {
                         fontWeight: FontWeight.w500,
                         fontSize: 30),
                   )),
+              // Sign Up Text
               Container(
                   alignment: Alignment.center,
                   padding: const EdgeInsets.all(10),
@@ -37,6 +42,7 @@ class _SignUpState extends State<SignUp> {
                     'Sign up',
                     style: TextStyle(fontSize: 20),
                   )),
+              // Name Field
               Container(
                   padding: const EdgeInsets.all(10),
                   child: TextField(
@@ -44,6 +50,16 @@ class _SignUpState extends State<SignUp> {
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: 'User Name',
+                    ),
+                  )),
+              // Email Field
+              Container(
+                  padding: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: emailController,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Email',
                     ),
                   )),
               Container(
@@ -66,11 +82,7 @@ class _SignUpState extends State<SignUp> {
                           )))),
               Container(
                   padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                  child: ElevatedButton(
-                      onPressed: () {
-                        doSignup();
-                      },
-                      child: const Text('Sign Up'))),
+                  child: _buildSignupButton()),
               Container(
                   alignment: Alignment.center,
                   padding: const EdgeInsets.all(10),
@@ -82,16 +94,30 @@ class _SignUpState extends State<SignUp> {
                 children: <Widget>[
                   const Text('Already have an account?'),
                   TextButton(
+                    onPressed: widget.goLogin,
                     child: const Text(
                       'Login',
                       style: TextStyle(fontSize: 20),
                     ),
-                    onPressed: widget.goLogin,
                   )
                 ],
               )
             ])));
   }
 
+  Widget _buildSignupButton() {
+    return ElevatedButton(
+        onPressed: checkIfAbleToLogin(), child: const Text('Sign Up'));
+  }
+
+  VoidCallback? checkIfAbleToLogin() {
+    if (!_isPasswordLongEnough) {
+      return null;
+    } else {
+      return doSignup;
+    }
+  }
+
   void doSignup() {}
+  // TODO implement doSignup
 }

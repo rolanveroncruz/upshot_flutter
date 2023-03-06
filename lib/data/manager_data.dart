@@ -20,12 +20,13 @@ class ManagerDataService {
 
     List<EMFeedbackJourney> retval = [];
     if (data["status"] == "ok") {
-      retval = createListFromAllFeedbackStatus(data["active_ongoing_journeys"]);
+      retval =
+          _createListFromAllFeedbackStatus(data["active_ongoing_journeys"]);
     }
     return retval;
   }
 
-  List<EMFeedbackJourney> createListFromAllFeedbackStatus(List<dynamic> all) {
+  List<EMFeedbackJourney> _createListFromAllFeedbackStatus(List<dynamic> all) {
     List<EMFeedbackJourney> result = [];
     for (var i = 0; i < all.length; i++) {
       Map<String, dynamic> journey = all[i];

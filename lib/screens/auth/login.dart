@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:upshot_flutter/data/api.dart';
-import 'package:upshot_flutter/screens/auth/signup.dart';
 import '../../shared/sp_helper.dart';
 import 'dart:convert';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 class Login extends StatefulWidget {
   final VoidCallback goSignup;
@@ -15,10 +15,13 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   TextEditingController nameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  late FirebaseMessaging messaging;
   bool _passwordVisible = false;
   final SPHelper helper = SPHelper();
   final API api = API();
   String errorMessage = "";
+  bool _isPasswordLongEnough = false;
+  String? fcmToken;
 
   @override
   void initState() {
@@ -27,13 +30,18 @@ class _LoginState extends State<Login> {
       var userlogin = helper.readUserLogin();
       var userlogstr = json.encode(userlogin);
       // ignore: avoid_print
-      print('userlogin is $userlogstr');
+      print('In Login.initStte(), userlogin is $userlogstr');
       if (userlogin != null) {
         Navigator.pushNamed(context, '/home');
       }
       api.init();
     });
-  }
+    // Firebase messaging stuff
+    messaging = FirebaseMessaging.instance;
+    messaging.getToken().then((value) {
+      fcmToken = value;
+    });
+  } // end of initState
 
   @override
   Widget build(BuildContext context) {
@@ -72,6 +80,17 @@ class _LoginState extends State<Login> {
                   child: TextField(
                       obscureText: !_passwordVisible,
                       controller: passwordController,
+                      onChanged: (theText) {
+                        if (theText.length > 7) {
+                          setState(() {
+                            _isPasswordLongEnough = true;
+                          });
+                        } else {
+                          setState(() {
+                            _isPasswordLongEnough = false;
+                          });
+                        }
+                      },
                       decoration: InputDecoration(
                           border: const OutlineInputBorder(),
                           labelText: 'Password',
@@ -87,11 +106,7 @@ class _LoginState extends State<Login> {
                           )))),
               Container(
                   padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                  child: ElevatedButton(
-                      onPressed: () {
-                        doLogin();
-                      },
-                      child: const Text('Log in'))),
+                  child: _buildLoginButton()),
               Container(
                   alignment: Alignment.center,
                   padding: const EdgeInsets.all(10),
@@ -119,12 +134,26 @@ class _LoginState extends State<Login> {
             ])));
   }
 
+  Widget _buildLoginButton() {
+    return ElevatedButton(
+        onPressed: checkIfAbleToLogin(), child: const Text('Log in'));
+  }
+
+  VoidCallback? checkIfAbleToLogin() {
+    if (!_isPasswordLongEnough) {
+      return null;
+    } else {
+      return doLogin;
+    }
+  }
+
   void doLogin() {
     var email = nameController.text;
     var password = passwordController.text;
-    api.login(email, password).then((value) => {
+    var fbaseToken = fcmToken;
+    api.login(email, password, fbaseToken).then((value) => {
           if (value.item1 == 0)
-            {print("Login successful"), Navigator.pushNamed(context, '/home')}
+            {Navigator.pushNamed(context, '/home')}
           else
             {
               setState(() => {errorMessage = value.item2!})

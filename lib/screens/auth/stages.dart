@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:upshot_flutter/screens/auth/signup.dart';
+import 'package:step_progress_indicator/step_progress_indicator.dart';
 
 class PreAuth extends StatelessWidget {
   final PageController _controller = PageController();
@@ -46,11 +46,12 @@ class PreAuth extends StatelessWidget {
   }
 }
 
+// ignore: must_be_immutable
 class PageZero extends StatelessWidget {
-  VoidCallback next;
-  VoidCallback skipToEnd;
-  VoidCallback goLogin;
-  VoidCallback goSignUp;
+  late VoidCallback next;
+  late VoidCallback skipToEnd;
+  late VoidCallback goLogin;
+  late VoidCallback goSignUp;
   PageZero(
       {Key? key,
       required this.skipToEnd,
@@ -109,8 +110,8 @@ class PageZero extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text('Already have an account?'),
-                GestureDetector(
-                  onTap: goLogin,
+                TextButton(
+                  onPressed: goLogin,
                   child: const Text('Login In',
                       style: TextStyle(
                           color: Colors.blue, fontWeight: FontWeight.bold)),
@@ -124,8 +125,9 @@ class PageZero extends StatelessWidget {
   }
 }
 
+// ignore: must_be_immutable
 class PageOne extends StatelessWidget {
-  VoidCallback skipToEnd;
+  late VoidCallback skipToEnd;
   PageOne({Key? key, required this.skipToEnd}) : super(key: key);
 
   @override
@@ -133,6 +135,13 @@ class PageOne extends StatelessWidget {
     return Scaffold(
         body: SafeArea(
             child: Column(children: [
+      const Padding(
+        padding: EdgeInsets.all(8.0),
+        child: StepProgressIndicator(
+          totalSteps: 4,
+          currentStep: 1,
+        ),
+      ),
       const SizedBox(height: 100),
       SizedBox(
         width: double.infinity,
@@ -155,15 +164,23 @@ class PageOne extends StatelessWidget {
   }
 }
 
+// ignore: must_be_immutable
 class PageTwo extends StatelessWidget {
-  VoidCallback? skipToEnd;
-  PageTwo({Key? key, this.skipToEnd}) : super(key: key);
+  late VoidCallback skipToEnd;
+  PageTwo({Key? key, required this.skipToEnd}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: SafeArea(
             child: Column(children: [
+      const Padding(
+        padding: EdgeInsets.all(8.0),
+        child: StepProgressIndicator(
+          totalSteps: 4,
+          currentStep: 2,
+        ),
+      ),
       const SizedBox(height: 100),
       SizedBox(
         width: double.infinity,
@@ -186,6 +203,7 @@ class PageTwo extends StatelessWidget {
   }
 }
 
+// ignore: must_be_immutable
 class PageThree extends StatelessWidget {
   VoidCallback? skipToEnd;
   PageThree({Key? key, required this.skipToEnd}) : super(key: key);
@@ -195,6 +213,13 @@ class PageThree extends StatelessWidget {
     return Scaffold(
         body: SafeArea(
             child: Column(children: [
+      const Padding(
+        padding: EdgeInsets.all(8.0),
+        child: StepProgressIndicator(
+          totalSteps: 4,
+          currentStep: 3,
+        ),
+      ),
       const SizedBox(height: 100),
       SizedBox(
         width: double.infinity,
@@ -217,6 +242,7 @@ class PageThree extends StatelessWidget {
   }
 }
 
+// ignore: must_be_immutable
 class LastPage extends StatelessWidget {
   VoidCallback goLogin;
   VoidCallback goSignUp;
@@ -231,12 +257,21 @@ class LastPage extends StatelessWidget {
       child: Center(
           child: SingleChildScrollView(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             const Padding(
               padding: EdgeInsets.all(8.0),
+              child: StepProgressIndicator(
+                totalSteps: 4,
+                currentStep: 4,
+              ),
+            ),
+            const SizedBox(height: 158),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
               child: Text("Welcome to Upshot",
                   style: TextStyle(
-                      color: Colors.grey,
+                      color: Colors.grey.shade700,
                       fontWeight: FontWeight.bold,
                       fontSize: 37)),
             ),
@@ -246,7 +281,7 @@ class LastPage extends StatelessWidget {
                   'Thanks for giving Upshot a shot! Let\'s get started by creating your account.',
                   style: TextStyle(fontSize: 20)),
             ),
-            const SizedBox(height: 250),
+            const SizedBox(height: 350),
             ElevatedButton(
                 onPressed: goSignUp,
                 style: ElevatedButton.styleFrom(
