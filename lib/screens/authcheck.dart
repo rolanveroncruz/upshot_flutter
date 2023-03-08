@@ -26,6 +26,7 @@ class _AuthCheckState extends State<AuthCheck> {
     var userEmail = json.encode(user?.email);
     // ignore: avoid_print
     print("In Auth Check initState, user: $user");
+    // ignore: avoid_print
     print("In Auth Check initState(), userEmail: $userEmail");
     api.init();
   }

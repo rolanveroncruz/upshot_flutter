@@ -1,6 +1,7 @@
 // ignore_for_file: constant_identifier_names
 
 enum UserRoles {
+  none, // adding this since enums are 0-based, and FL=1
   FL,
   EM,
   FLEM,

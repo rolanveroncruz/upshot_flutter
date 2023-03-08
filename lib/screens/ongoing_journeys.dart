@@ -4,6 +4,7 @@ import 'package:upshot_flutter/data/frontliner_data.dart';
 import 'package:upshot_flutter/data/manager_data.dart';
 import 'package:upshot_flutter/data/user_login.dart';
 import 'package:upshot_flutter/shared/sp_helper.dart';
+import 'package:emojis/emojis.dart';
 
 class OngoingJourneys extends StatefulWidget {
   const OngoingJourneys({super.key});
@@ -56,14 +57,24 @@ class _OngoingJourneysState extends State<OngoingJourneys> {
     return Scaffold(
         appBar: AppBar(title: const Text("Ongoing Journeys")),
         body: SafeArea(
+            // if roleId is FLEM, then two lists are created.
+            // else, just one.
             child: roleId == UserRoles.FLEM.index
                 ? _twoListColumn()
-                : oneListColumn()));
+                : _oneListColumn()));
   }
 
-  Widget oneListColumn() {
+  Widget _oneListColumn() {
+    // The _oneListColumn generates just one long list eihter for an
+    // EM only role or FL only role.
+    listOneCount = roleId == UserRoles.EM.index
+        ? allFeedbackGiven.length
+        : allFlReceivedFb.length;
+    var headerString = roleId == UserRoles.EM.index
+        ? "FEEDBACK CREATED ($listOneCount)"
+        : "FEEDBACK RECEIVED ($listOneCount)";
     return Column(children: [
-      // List One: Header
+      // One List: Header
       Padding(
         padding: const EdgeInsets.all(1.0),
         child: GestureDetector(
@@ -71,20 +82,25 @@ class _OngoingJourneysState extends State<OngoingJourneys> {
                   listOneCollapsed = !listOneCollapsed;
                 }),
             child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Text("FEEDBACK CREATED ($listOneCount)",
+              Text(headerString,
                   style: const TextStyle(fontWeight: FontWeight.bold)),
               Icon(listOneCollapsed ? Icons.expand_less : Icons.expand_more)
             ])),
       ),
-      //List One: list
+      //One List: list
       Expanded(
           child: listOneCollapsed
               ? const Center(child: Text(" "))
-              : _buildListOne())
+              : _buildOneList())
     ]);
   }
 
   Widget _twoListColumn() {
+    // _twoListColumn is exclusively for FLEMs: the top list will always
+    // be a list of created by EM feedback, and the second will always be
+    // received by FL feedback.
+    listOneCount = allFeedbackGiven.length;
+    listTwoCount = allFlReceivedFb.length;
     return Column(children: [
       // List One: Header
       Padding(
@@ -103,7 +119,7 @@ class _OngoingJourneysState extends State<OngoingJourneys> {
       Expanded(
           child: listOneCollapsed
               ? const Center(child: Text(" "))
-              : _buildListOne()),
+              : _buildListViewOneOfTwo()),
 
       const SizedBox(height: 30),
       // List Two Header
@@ -114,35 +130,41 @@ class _OngoingJourneysState extends State<OngoingJourneys> {
                   listTwoCollapsed = !listTwoCollapsed;
                 }),
             child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Text("FEEDBACK RECEIVED($listOneCount)",
+              Text("FEEDBACK RECEIVED($listTwoCount)",
                   style: const TextStyle(fontWeight: FontWeight.bold)),
               Icon(listTwoCollapsed ? Icons.expand_less : Icons.expand_more)
             ])),
       ),
       //List Two List
-      Padding(
-        padding: const EdgeInsets.all(1.0),
-        child: Expanded(
-            child: SizedBox(
-                height: 300,
-                child: listTwoCollapsed
-                    ? const Center(child: Text(" "))
-                    : _buildListTwo())),
-      ),
+      Expanded(
+          child: SizedBox(
+              height: 300,
+              child: listTwoCollapsed
+                  ? const Center(child: Text(" "))
+                  : _buildListViewTwoOfTwo())),
     ]);
   }
 
-  Widget _buildListOne() {
-    if (roleId == UserRoles.FL.index) {}
+  Widget _buildListViewOneOfTwo() {
+    // _buldListViewOneOfTWo is for building the top list in a two-list ongoing-journeys page.
+    // two-list page only happens when the user has UserRoles.FLEM.
+    // The top role is always an EM list.
+    return ListView.builder(
+      itemCount: allFeedbackGiven.length,
+      itemBuilder: emItemBuilder,
+    );
+  }
+
+  Widget _buildListViewTwoOfTwo() {
     return ListView.builder(
       itemCount: allFlReceivedFb.length,
       itemBuilder: flItemBuilder,
     );
   }
 
-  Widget? flItemBuilder(BuildContext context, dynamic index) {
-    FLFeedbackJourney journey = allFlReceivedFb[index];
-    var splitEMname = journey.emName.split(' ');
+  Widget? emItemBuilder(BuildContext context, dynamic index) {
+    EMFeedbackJourney journey = allFeedbackGiven[index];
+    var splitEMname = journey.frontlinerName.split(' ');
     var emAvatar = splitEMname[0][0] + splitEMname[splitEMname.length - 1][0];
     return Card(
         child: ListTile(
@@ -153,43 +175,78 @@ class _OngoingJourneysState extends State<OngoingJourneys> {
               fontWeight: FontWeight.bold,
               color: Colors.blueAccent,
               fontSize: 13)),
-      subtitle: Text(journey.emName,
-          style: const TextStyle(fontWeight: FontWeight.bold)),
+      subtitle: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text(journey.frontlinerName,
+            style: const TextStyle(fontWeight: FontWeight.bold)),
+        Row(children: [
+          Text(
+              journey.feedbackType == "Positive"
+                  ? "${Emojis.greenHeart} ${journey.feedbackType} "
+                  : "${Emojis.fountainPen} ${journey.feedbackType}",
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: journey.feedbackType == "Positive"
+                      ? Colors.green
+                      : Colors.red)),
+          Text(journey.requiresFace2Face ? " .  1-on-1" : " . Async",
+              style:
+                  const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+        ]),
+        Text(
+            "${journey.generalTopic} ${Emojis.backhandIndexPointingRight} ${journey.subTopic}"),
+      ]),
       trailing: const Icon(Icons.chevron_right_outlined),
     ));
   }
 
-  Widget _buildListTwo() {
-    return ListView.builder(
-      itemCount: allFlReceivedFb.length,
-      itemBuilder: emItemBuilder,
-    );
-  }
-
-  Widget? emItemBuilder(BuildContext context, dynamic index) {
+  Widget? flItemBuilder(BuildContext context, dynamic index) {
     FLFeedbackJourney journey = allFlReceivedFb[index];
     var splitEMname = journey.emName.split(' ');
     var emAvatar = splitEMname[0][0] + splitEMname[splitEMname.length - 1][0];
     return Card(
         child: ListTile(
+      leading: CircleAvatar(
+          backgroundColor: Colors.blueAccent, child: Text(emAvatar)),
       title: const Text("VIEW FEEDBACK",
           style: TextStyle(
               fontWeight: FontWeight.bold,
-              fontSize: 13,
-              color: Colors.blueAccent)),
-      leading: CircleAvatar(
-          backgroundColor: Colors.blueAccent, child: Text(emAvatar)),
+              color: Colors.blueAccent,
+              fontSize: 13)),
       subtitle: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text(journey.emName, style: TextStyle(fontWeight: FontWeight.bold)),
-        Text(" \u2764 \u1F49 ${journey.feedbackType} ",
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: journey.feedbackType == "Positive"
-                    ? Colors.green
-                    : Colors.red)),
-        Text(journey.generalTopic)
+        Text(journey.emName,
+            style: const TextStyle(fontWeight: FontWeight.bold)),
+        Row(children: [
+          Text(
+              journey.feedbackType == "Positive"
+                  ? "${Emojis.greenHeart} ${journey.feedbackType} "
+                  : "${Emojis.fountainPen} ${journey.feedbackType}",
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: journey.feedbackType == "Positive"
+                      ? Colors.green
+                      : Colors.red)),
+          Text(journey.requiresFaceToFace ? " .  1-on-1" : " . Async",
+              style:
+                  const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+        ]),
+        Text(
+            "${journey.generalTopic} ${Emojis.backhandIndexPointingRight} ${journey.subTopic}"),
       ]),
       trailing: const Icon(Icons.chevron_right_outlined),
     ));
+  }
+
+  Widget _buildOneList() {
+    if (roleId == UserRoles.FL.index) {
+      return ListView.builder(
+        itemCount: allFlReceivedFb.length,
+        itemBuilder: flItemBuilder,
+      );
+    } else {
+      return ListView.builder(
+        itemCount: allFeedbackGiven.length,
+        itemBuilder: emItemBuilder,
+      );
+    }
   }
 }

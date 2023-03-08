@@ -9,12 +9,12 @@ class EMEntry {
   EMEntry();
 
   EMEntry.fromJson(Map<String, dynamic> entry) {
-    employeeDo = entry["employee_do"];
-    impact = entry["impact"];
-    doMore = entry["do_more"];
-    doLess = entry["do_less"];
-    stopDoing = entry["stop_less"];
-    addNotes = entry["add_notes"];
+    employeeDo = entry["employee_do"] ?? " ";
+    impact = entry["impact"] ?? " ";
+    doMore = entry["do_more"] ?? " ";
+    doLess = entry["do_less"] ?? " ";
+    stopDoing = entry["stop_less"] ?? " ";
+    addNotes = entry["add_notes"] ?? " ";
   }
 }
 
@@ -23,6 +23,7 @@ class FLFeedbackJourney {
   String emName = "";
   String emPosition = "";
   String feedbackType = "";
+  bool requiresFaceToFace = false;
   DateTime date = DateTime.now();
   String generalTopic = "";
   String subTopic = "";
@@ -61,7 +62,7 @@ class EMFeedbackJourney {
   String generalTopic = "";
   String? subTopic = "";
   String? optionalOtherSubtopic = "";
-  bool? requiresFace2Face;
+  bool requiresFace2Face = false;
   String frontlinerName = "";
   DateTime dateCreated = DateTime.now();
   String status = "";
@@ -74,7 +75,7 @@ class EMFeedbackJourney {
     generalTopic = fb["general_topic"];
     subTopic = fb["subtopic"];
     optionalOtherSubtopic = fb["other_optional_subtopic"];
-    requiresFace2Face = fb["requires_face_to_face"];
+    requiresFace2Face = fb["requires_face_to_face"] ?? false;
     frontlinerName = fb["frontliner_name"];
     dateCreated = string2Date(fb["datetime"]);
     status = fb["status"];
