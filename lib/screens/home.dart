@@ -109,12 +109,14 @@ class _HomeScreenState extends State<HomeScreen> {
         ]),
         bottomNavigationBar: const UpshotBottomNav(),
         floatingActionButton: FloatingActionButton(
-          child: const Icon(Icons.add),
-          onPressed: () {},
-        ));
+            child: const Icon(Icons.add), onPressed: () => newCapture()));
   }
 
   void gotoOngoingJourneys() {
     Navigator.pushNamed(context, '/ongoing');
+  }
+
+  void newCapture() {
+    Navigator.pushNamed(context, '/capture');
   }
 }

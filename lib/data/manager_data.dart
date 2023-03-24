@@ -35,4 +35,28 @@ class ManagerDataService {
     }
     return result;
   }
+
+  Future<List<DirectReport>> getAllDirectReports() async {
+    String? server = helper.getServerAddress();
+    String? uuid = helper.getUserUUID();
+    Uri uri = Uri.http(server!, "/api/$uuid/get_staff");
+    http.Response result = await http.post(uri, body: {});
+    Map<String, dynamic> data = json.decode(result.body);
+
+    List<DirectReport> retval = [];
+    if (data["status"] == "ok") {
+      retval = _createDRListFromGetStaff(data["reports"]);
+    }
+    return retval;
+  }
+
+  List<DirectReport> _createDRListFromGetStaff(List<dynamic> all) {
+    List<DirectReport> result = [];
+    for (var i = 0; i < all.length; i++) {
+      Map<String, dynamic> dr = all[i];
+      DirectReport dR = DirectReport.fromJson(dr);
+      result.add(dR);
+    }
+    return result;
+  }
 }

@@ -30,7 +30,7 @@ class FLFeedbackJourney {
   EMEntry emEntry = EMEntry();
 
   FLFeedbackJourney.fromJson(Map<String, dynamic> fb) {
-    fbId = fb["fb_id"];
+    fbId = fb["journey_id"];
     emName = fb["em_name"];
     emPosition = fb["em_position"];
     feedbackType = fb["feedback_type"];
@@ -81,5 +81,14 @@ class EMFeedbackJourney {
     status = fb["status"];
     phaseId = fb["current_progress"]["phase_id"];
     title = fb["current_progress"]["title"];
+  }
+}
+
+class DirectReport {
+  String name = "";
+  int userId = 0;
+  DirectReport.fromJson(Map<String, dynamic> dr) {
+    userId = dr["user_id"];
+    name = dr["name"];
   }
 }

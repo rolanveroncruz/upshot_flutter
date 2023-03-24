@@ -10,6 +10,8 @@ import 'package:upshot_flutter/screens/ongoing_journeys.dart';
 import 'package:upshot_flutter/screens/profile.dart';
 import 'package:upshot_flutter/screens/splash.dart';
 import 'package:upshot_flutter/shared/sp_helper.dart';
+import 'package:upshot_flutter/screens/capture-feedback.dart/capture_controller.dart';
+
 import 'screens/home.dart';
 
 void main() async {
@@ -45,6 +47,7 @@ class _UpshotAppState extends State<UpshotApp> {
           '/activity': (context) => ActivityScreen(),
           '/profile': (context) => ProfileScreen(),
           '/ongoing': (context) => OngoingJourneys(),
+          '/capture': (context) => CaptureController(),
         });
   }
 }
